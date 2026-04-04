@@ -5,7 +5,7 @@ export const getAllTasks = async (req, res) => {
         const tasks = await Task.find();
         res.status(200).json(tasks);
     } catch (error) {
-        console.error("Error while retrieving all tasks from the database", error);
+        console.error("Error while calling getAllTasks", error);
         res.status(500).json({message: "Interval error"})
     }
 };
@@ -18,15 +18,50 @@ export const createTask = async (req, res) => {
         const newTask = await task.save();
         res.status(201).json(newTask);
     } catch (error) {
-        console.error("Error while creating new task to the database", error);
+        console.error("Error while calling createTask", error);
         res.status(500).json({message: "Interval error"})
     }
 };
 
-export const updateTask = (req, res) => {
-    res.status(200).json({message: "Task has been updated successfully."});
+export const updateTask = async (req, res) => {
+    try {
+        const {title, status, completedAt} = req.body;
+
+        // Save the action into a variable to check if that action was successful or not
+        const updatedTask = await Task.findByIdAndUpdate(
+            req.params.id,
+            {
+                title,
+                status,
+                completedAt
+            },
+            { new: true }
+        )
+
+        if (!updatedTask) {
+            return res.status(404).json({message: "task not found"});
+        }
+
+        return res.status(200).json(updatedTask);
+    } catch (error) {
+        console.error("Error while calling updateTask", error);
+        if (res.headersSent) return;
+        return res.status(500).json({message: "Interval error"});
+    }
 };
 
-export const deleteTask = (req, res) => {
-    res.status(200).json({message: "Task has been deleted successfully"});
+export const deleteTask = async (req, res) => {
+    try {
+        const deletedTask = await Task.findByIdAndDelete(req.params.id);
+
+        if (!deletedTask) {
+            return res.status(404).json({message: "task not found"});
+        }
+
+        return res.status(200).json(deletedTask);
+    } catch (error) {
+        console.error("Error while calling deleteTask", error);
+        if (res.headersSent) return;
+        return res.status(500).json({message: "Interval error"});
+    }
 }
