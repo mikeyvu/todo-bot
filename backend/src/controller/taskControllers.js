@@ -1,9 +1,26 @@
-export const getAllTasks = (request, response) => {
-    response.status(200).send("You have 20 tasks need to be done");
+import Task from "../models/Task.js";
+
+export const getAllTasks = async (req, res) => {
+    try {
+        const tasks = await Task.find();
+        res.status(200).json(tasks);
+    } catch (error) {
+        console.error("Error while retrieving all tasks from the database", error);
+        res.status(500).json({message: "Interval error"})
+    }
 };
 
-export const createTask = (req, res) => {
-    res.status(201).json({message: "New tasks has been successfully added."});
+export const createTask = async (req, res) => {
+    try {
+        const {title} = req.body;
+        const task = new Task({title});
+
+        const newTask = await task.save();
+        res.status(201).json(newTask);
+    } catch (error) {
+        console.error("Error while creating new task to the database", error);
+        res.status(500).json({message: "Interval error"})
+    }
 };
 
 export const updateTask = (req, res) => {

@@ -8,9 +8,12 @@ const PORT = process.env.PORT || 5001;
 const app = express();
 
 connectDB();
+
+app.use(express.json()); //middleware
+
 app.use("/api/tasks", taskRoute);
 
 app.listen(PORT, () => {
-    console.log('server start on port ${PORT}');
+    console.log(`server start on port ${PORT}`);
 });
 
