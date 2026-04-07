@@ -9,3 +9,20 @@
 5. What is middleware and what are the popular middelware nowadays? 
 
 6. How do expressjs handle the PUT request? What is it different from other frameworks like Spring framework?
+
+7. What is React Router and how is it different with traditional anchor tag on html page? 
+
+8. How does React Router help with changing the pages on client website?
+
+9. Explain this command: npm i reacter-router sonner axios lucide-react
+
+10. Wrap the whole application in BrowserRouter for what?
+
+11. What are the steps to install vite, tailwindcss and shadcn/ui?
+
+12. Background generate using patterncraft.fun 
+
+13. What is tailwind merge and how does it resolve merge conflict between tailwind layers?
+
+14. What is useEffect and what does it track? (1:40:00)
+
