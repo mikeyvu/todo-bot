@@ -2,7 +2,7 @@ import Task from "../models/Task.js";
 
 export const getAllTasks = async (req, res) => {
     try {
-        const tasks = await Task.find();
+        const tasks = await Task.find().sort({createdAt: 'desc'});
         res.status(200).json(tasks);
     } catch (error) {
         console.error("Error while calling getAllTasks", error);
