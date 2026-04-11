@@ -26,3 +26,12 @@
 
 14. What is useEffect and what does it track? (1:40:00)
 
+15. Something is wrong with my github commits, where the backend successfully commited its message, while the frontend and the root are mixing up their commits
+
+16. What is aggregate pipeline (phuong phap bang chuyen tong hop)? What is $facet in aggregate() function? 
+
+17. What is onChange parameter? What is value parameter and how do they affect the input element?
+
+18. What is arrow function? And how React parse the event into those functions?
+
+19. What is onKeyPress parameter and how can we implement it?
