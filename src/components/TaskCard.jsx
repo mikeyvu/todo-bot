@@ -1,12 +1,71 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card } from './ui/card';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Calendar, CheckCircle2, Circle, SquarePen, Trash2 } from 'lucide-react';
 import { Input } from './ui/input';
+import api from '@/lib/axios';
+import { toast } from 'sonner';
 
-const TaskCard = ({ task, index }) => {
-    let isEditing = false;
+const TaskCard = ({ task, index, handleTaskChange }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [updateTaskTitle, setUpdateTaskTitle] = useState(task.title || "");
+
+    const deleteTask = async (taskId) => {
+        try {
+            await api.delete(`/tasks/${taskId}`);
+            toast.success("Task has been deleted")
+            handleTaskChange();
+        } catch (error) {
+            console.error("Error while deleting a task", error);
+            toast.error("Error while deleting a task");
+        }
+    }
+
+    const updateTask = async () => {
+        try {
+            setIsEditing(false);
+            await api.put(`/tasks/${task._id}`, {
+                title: updateTaskTitle
+            });
+            toast.success(`Task has been updated to ${updateTaskTitle}`);
+            handleTaskChange();
+        } catch (error) {
+            console.error("Error while updating a task", error);
+            toast.error("Error while updating a task");
+        }
+    }
+
+    const handleKeyPress = (event) => {
+        if (event.key === "Enter") {
+            updateTask();
+        }
+    }
+
+    const toggleCompleteTask = async () => {
+        try {
+            if (task.status === "active") {
+                await api.put(`/tasks/${task._id}`, {
+                    status: "complete",
+                    completedAt: new Date().toISOString()
+                });
+
+                toast.success(`Task ${task.title} has been completed`)
+            } else {
+                await api.put(`/tasks/${task._id}`, {
+                    status: "active",
+                    completedAt: null
+                });
+
+                toast.success(`Task ${task.title} has been changed back to active`)
+            }
+
+            handleTaskChange();
+        } catch (error) {
+            console.error("Error while toggling a task", error);
+            toast.error("Error while toggling a task");
+        }
+    }
 
     return (
         <Card
@@ -28,6 +87,7 @@ const TaskCard = ({ task, index }) => {
                             ? 'text-success hover:text-success/80'
                             : "text-muted-foreground hover:text-primary"
                     )}
+                    onClick={toggleCompleteTask}
                 >
                     {task.status === 'complete' ? (
                         <CheckCircle2 className='size-5' />
@@ -41,8 +101,16 @@ const TaskCard = ({ task, index }) => {
                     {isEditing ? (
                         <Input
                             placeholder="What's the tasks to do?"
-                            className='flex-1 h-12 text-base border-border/50 focus:border-primary/50 focus:ring-primary/20 '
+                            className='flex-1 h-12 text-base border-black focus:border-primary/50 focus:ring-primary/20 '
                             type="text"
+                            value={updateTaskTitle}
+                            autoFocus
+                            onChange={(e) => setUpdateTaskTitle(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            onBlur={() => {
+                                setIsEditing(false);
+                                setUpdateTaskTitle(task.title || "");
+                            }}
                         />
                     ) : (
                         <p className={cn(
@@ -79,15 +147,23 @@ const TaskCard = ({ task, index }) => {
                     <Button
                         variant='ghost'
                         size='icon'
-                        className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-info">
+                        className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-info"
+                        onClick={() => {
+                            setIsEditing(true);
+                            setUpdateTaskTitle(task.title || "");
+                        }}
+                    >
                         <SquarePen className='size-4' />
+
                     </Button>
 
                     {/* Delete Button  */}
                     <Button
                         variant='ghost'
                         size='icon'
-                        className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-info">
+                        className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-info"
+                        onClick={() => deleteTask(task._id)}
+                    >
                         <Trash2 className='size-4' />
                     </Button>
                 </div>

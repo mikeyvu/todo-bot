@@ -9,7 +9,7 @@ const TaskEmptyState = ({ filter }) => {
                 <Circle className='mx-auto size-12 text-muted-foreground' />
 
                 <div>
-                    <h3 className='font-medium text-foreground'>
+                    <h3 className='font-medium text-muted-foreground'>
                         {
                             filter === "active"
                                 ? "There is no ongoing tasks"

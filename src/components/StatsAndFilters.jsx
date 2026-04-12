@@ -4,7 +4,12 @@ import { FilterType } from '@/lib/data'
 import { Button } from './ui/button'
 import { Filter } from 'lucide-react'
 
-const StatsAndFilters = ({completedTaskCount = 0, activeTaskCount = 0, filter = "all"}) => {
+const StatsAndFilters = ({
+  completeTaskCount = 0, 
+  activeTaskCount = 0, 
+  filter = "all",
+  setFilter
+}) => {
   return (
     <div className='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
       {/* Stats */}
@@ -13,7 +18,7 @@ const StatsAndFilters = ({completedTaskCount = 0, activeTaskCount = 0, filter = 
           {activeTaskCount} {FilterType.active}
         </Badge>
         <Badge variant='secondary' className='bg-white/100 text-success border-success/20'>
-          {completedTaskCount} {FilterType.completed}
+          {completeTaskCount} {FilterType.completed}
         </Badge>
       </div>
 
@@ -25,6 +30,7 @@ const StatsAndFilters = ({completedTaskCount = 0, activeTaskCount = 0, filter = 
           variant={filter === type ? "gradient" : "ghost"}
           size="sm"
           className='capitalize'
+          onClick={() => setFilter(type)}
           >
             <Filter className='size-4'/>
             {FilterType[type]}
