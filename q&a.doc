@@ -35,3 +35,10 @@
 18. What is arrow function? And how React parse the event into those functions?
 
 19. What is onKeyPress parameter and how can we implement it?
+
+20. Why did the database connection fail? And how did the code snippet below solve the problem?
+        import dns from "node:dns";
+        // ✅ Force Node.js to use Cloudflare DNS
+        dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
+21. Why the database is connected but not getting data from the database? How to configure the db name in the URL String?
