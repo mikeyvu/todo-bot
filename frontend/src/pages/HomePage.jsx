@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import StatsAndFilters from "@/components/StatsAndFilters";
 import TaskList from "@/components/TaskList";
 import TaskListPagination from "@/components/TaskListPagination";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import api from "@/lib/axios";
 import { visibleTaskLimit } from "@/lib/data";
@@ -18,15 +18,7 @@ const HomePage = () => {
     const [dateQuery, setDateQuery] = useState("today")
     const [page, setPage] = useState(1);
 
-    useEffect(() => {
-        fetchTasks();
-    }, [dateQuery]);
-
-    useEffect(() => {
-        setPage(1);
-    },[filter, dateQuery]);
-
-    const fetchTasks = async () => {
+    const fetchTasks = useCallback(async () => {
         try {
             const res = await api.get(`/tasks?filter=${dateQuery}`);
             setTaskBuffer(res.data.tasks);
@@ -37,20 +29,31 @@ const HomePage = () => {
             console.error("Error while getting tasks from backend:", error);
             toast.error("Error while getting tasks from backend");
         }
-    }
+    }, [dateQuery]);
 
-    const handleTaskChange = () => {
+    useEffect(() => {
+        fetchTasks();
+    }, [fetchTasks]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [filter, dateQuery]);
+
+    const handleTaskChange = ({ resetPage = false } = {}) => {
+        if (resetPage) {
+            setPage(1);
+        }
         fetchTasks();
     }
 
     const handleNext = () => {
-        if (page < totalPages) {
+        if (currentPage < totalPages) {
             setPage((prev) => prev + 1);
         }
     }
 
     const handlePrev = () => {
-        if (page > 0) {
+        if (currentPage > 1) {
             setPage((prev) => prev - 1);
         }
     }
@@ -71,16 +74,13 @@ const HomePage = () => {
         }
     });
 
+    const totalPages = Math.max(1, Math.ceil(filteredTasks.length / visibleTaskLimit));
+    const currentPage = Math.min(Math.max(page, 1), totalPages);
+
     const visibleTasks = filteredTasks.slice(
-        (page - 1) * visibleTaskLimit,
-        page * visibleTaskLimit
+        (currentPage - 1) * visibleTaskLimit,
+        currentPage * visibleTaskLimit
     );
-
-    if (visibleTasks.length === 0) {
-        handlePrev();
-    }
-
-    const totalPages = Math.ceil(filteredTasks.length / visibleTaskLimit);
 
 
     return (
@@ -98,7 +98,7 @@ const HomePage = () => {
                 <div className="w-full max-w-2xl p-6 mx-auto space-y-6">
                     <Header />
 
-                    <AddTask handleNewTaskAdded={handleTaskChange} />
+                    <AddTask handleNewTaskAdded={() => handleTaskChange({ resetPage: true })} />
 
                     <StatsAndFilters
                         filter={filter}
@@ -118,7 +118,7 @@ const HomePage = () => {
                         handleNext={handleNext} 
                         handlePrev={handlePrev}
                         handlePageChange={handlePageChange}
-                        page={page}
+                        page={currentPage}
                         totalPages={totalPages}
                         />
                         <DateTimeFilter dateQuery={dateQuery} setDateQuery={setDateQuery}/>
