@@ -1,10 +1,12 @@
 # Todo Bot
 
-A full-stack task management application built with React, Express, and MongoDB.
+This is a side project I built to get hands-on experience with shadcn/ui, and Tailwind CSS for cleaner and more maintainable class composition in reusable UI components.
+
+I used the MERN stack (MongoDB, Express, React, Node.js) to build and connect the full application end to end.
 
 ## Overview
 
-Todo Bot helps users manage daily tasks with a clean UI and practical filtering options.
+Todo Bot helps users manage daily tasks with a clean UI while exploring component-driven styling and frontend architecture.
 It supports:
 
 - Creating, updating, and deleting tasks
@@ -202,6 +204,21 @@ If deploying to Render or similar providers:
 	- Verify `MONGODB_CONNECTIONSTRING` is valid and accessible from your runtime environment.
 - CORS issues in development:
 	- Frontend should run on allowed origins configured in backend (`localhost:5173` / `localhost:5174`).
+
+## Next Stage
+
+Planned improvements for the next version:
+
+- User authentication and personalized data
+	- Implement sign up, login, and logout.
+	- Add protected routes and per-user task ownership so each user sees only their own task list.
+	- Suggested stack: JWT (access token) + hashed passwords (bcrypt) + auth middleware in Express.
+
+- RAG assistant for daily planning
+	- Integrate a Retrieval-Augmented Generation workflow to help users generate and refine daily task plans.
+	- Use user context (existing tasks, priorities, due dates, completion history) as retrieval input.
+	- Return actionable suggestions such as time-blocked schedules, priority ordering, and focus recommendations.
+	- Add user controls to accept, edit, or dismiss AI-generated tasks before saving.
 
 ## License
 
