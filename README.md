@@ -1,6 +1,6 @@
 # Todo Bot
 
-This is a side project I built to get hands-on experience with shadcn/ui, and Tailwind CSS for cleaner and more maintainable class composition in reusable UI components.
+A side project I built to get hands-on experience with shadcn/ui, and Tailwind CSS for cleaner and more maintainable class composition in reusable UI components.
 
 I used the MERN stack (MongoDB, Express, React, Node.js) to build and connect the full application end to end.
 
