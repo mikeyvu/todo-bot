@@ -42,3 +42,5 @@
         dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 21. Why the database is connected but not getting data from the database? How to configure the db name in the URL String?
+
+22. git submodule and tracked folder?

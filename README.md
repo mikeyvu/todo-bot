@@ -1,8 +1,10 @@
 # Todo Bot
 
-This is a side project I built to get hands-on experience with shadcn/ui, and Tailwind CSS for cleaner and more maintainable class composition in reusable UI components.
+A side project I built to get hands-on experience with shadcn/ui, and Tailwind CSS for cleaner and more maintainable class composition in reusable UI components.
 
 I used the MERN stack (MongoDB, Express, React, Node.js) to build and connect the full application end to end.
+
+Next stage: implement user authentication for a personalized to-do experience and integrate a RAG assistant to help users build smarter daily task plans.
 
 ## Overview
 
@@ -101,125 +103,17 @@ Default local URLs:
 - Frontend: `http://localhost:5173`
 - Backend API: `http://localhost:5001/api`
 
-## Available Scripts
-
-From root:
-
-- `npm run build`
-	- Installs dependencies in backend/frontend and builds frontend.
-- `npm run start`
-	- Starts backend server (`backend/src/server.js`).
-
-Backend:
-
-- `npm run dev --prefix backend` - Start backend with nodemon
-- `npm run start --prefix backend` - Start backend with node
-
-Frontend:
-
-- `npm run dev --prefix frontend` - Start Vite dev server
-- `npm run build --prefix frontend` - Production build
-- `npm run preview --prefix frontend` - Preview production build
-- `npm run lint --prefix frontend` - Lint frontend code
-
-## API Reference
-
-Base URL:
-
-- Local: `http://localhost:5001/api`
-- Production: `/api`
-
-Endpoints:
-
-### GET `/tasks`
-
-Returns tasks and aggregate counts.
-
-Query params:
-
-- `filter`: `today | week | month | all` (default: `today`)
-
-Response shape:
-
-```json
-{
-	"tasks": [],
-	"activeCount": 0,
-	"completeCount": 0
-}
-```
-
-### POST `/tasks`
-
-Create a new task.
-
-Request body:
-
-```json
-{
-	"title": "My new task"
-}
-```
-
-### PUT `/tasks/:id`
-
-Update a task.
-
-Request body (example):
-
-```json
-{
-	"title": "Updated title",
-	"status": "complete",
-	"completedAt": "2026-04-16T12:00:00.000Z"
-}
-```
-
-### DELETE `/tasks/:id`
-
-Delete a task by id.
-
-## Deployment
-
-This project is configured so the backend can serve the built frontend in production.
-
-Typical flow:
-
-1. Build frontend.
-2. Start backend.
-3. Backend serves static files from `frontend/dist` when `NODE_ENV=production`.
-
-If deploying to Render or similar providers:
-
-- Ensure `frontend/` is a normal tracked folder in this repository (not a Git submodule).
-- Build command: `npm run build`
-- Start command: `npm run start`
-- Add required environment variables (`MONGODB_CONNECTIONSTRING`, `NODE_ENV`, `PORT` if needed).
-
-## Troubleshooting
-
-- `ENOENT ... frontend/package.json` during deploy:
-	- Usually means `frontend/` was committed as a submodule pointer instead of normal files.
-- Database connection failure:
-	- Verify `MONGODB_CONNECTIONSTRING` is valid and accessible from your runtime environment.
-- CORS issues in development:
-	- Frontend should run on allowed origins configured in backend (`localhost:5173` / `localhost:5174`).
-
 ## Next Stage
 
 Planned improvements for the next version:
 
 - User authentication and personalized data
 	- Implement sign up, login, and logout.
-	- Add protected routes and per-user task ownership so each user sees only their own task list.
-	- Suggested stack: JWT (access token) + hashed passwords (bcrypt) + auth middleware in Express.
+	- Add protected routes and per-user task ownership so each user sees only their own task list using JWT (access token) + hashed passwords (bcrypt) + auth middleware in Express.
 
 - RAG assistant for daily planning
 	- Integrate a Retrieval-Augmented Generation workflow to help users generate and refine daily task plans.
 	- Use user context (existing tasks, priorities, due dates, completion history) as retrieval input.
 	- Return actionable suggestions such as time-blocked schedules, priority ordering, and focus recommendations.
 	- Add user controls to accept, edit, or dismiss AI-generated tasks before saving.
-
-## License
-
-ISC
+    
