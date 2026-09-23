@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Task from "../models/Task.js";
 
 export const getAllTasks = async (req, res) => {
@@ -25,7 +26,10 @@ export const getAllTasks = async (req, res) => {
         }
     }
 
-    const query = startDate ? {createdAt: {$gte: startDate}} : {};
+    const query = { owner: req.user._id };
+    if (startDate) {
+        query.createdAt = { $gte: startDate };
+    }
 
     try {
         const result = await Task.aggregate([
@@ -56,7 +60,7 @@ export const getAllTasks = async (req, res) => {
 export const createTask = async (req, res) => {
     try {
         const { title } = req.body;
-        const task = new Task({ title });
+        const task = new Task({ title, owner: req.user._id });
 
         const newTask = await task.save();
         res.status(201).json(newTask);
@@ -68,11 +72,15 @@ export const createTask = async (req, res) => {
 
 export const updateTask = async (req, res) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(404).json({ message: "task not found" });
+        }
+
         const { title, status, completedAt } = req.body;
 
         // Save the action into a variable to check if that action was successful or not
-        const updatedTask = await Task.findByIdAndUpdate(
-            req.params.id,
+        const updatedTask = await Task.findOneAndUpdate(
+            { _id: req.params.id, owner: req.user._id },
             {
                 title,
                 status,
@@ -95,7 +103,11 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
     try {
-        const deletedTask = await Task.findByIdAndDelete(req.params.id);
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(404).json({ message: "task not found" });
+        }
+
+        const deletedTask = await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id });
 
         if (!deletedTask) {
             return res.status(404).json({ message: "task not found" });

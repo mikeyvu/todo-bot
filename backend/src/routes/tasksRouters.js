@@ -1,6 +1,9 @@
 import express from "express";
 import { createTask, deleteTask, getAllTasks, updateTask } from "../controller/taskControllers.js";
+import { protectRoute } from "../middleware/protectRoute.js";
 const router = express.Router();
+
+router.use(protectRoute);
 
 router.get("/", getAllTasks);
 
